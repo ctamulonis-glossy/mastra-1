@@ -400,9 +400,11 @@ export function createStep<
       execute: async ({
         inputData,
         requestContext,
+        tracingContext,
       }: {
         inputData: z.infer<typeof ProcessorStepSchema>;
         requestContext: RequestContext;
+        tracingContext?: TracingContext;
       }): Promise<ProcessorStepOutput> => {
         // Cast to output type for easier property access - the discriminated union
         // ensures type safety at the schema level, but inside the execute function
@@ -442,6 +444,7 @@ export function createStep<
           abort,
           retryCount: retryCount ?? 0,
           requestContext,
+          tracingContext,
         };
 
         // Pass-through data that should flow to the next processor in a chain

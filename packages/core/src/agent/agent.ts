@@ -373,6 +373,13 @@ export class Agent<TAgentId extends string = string, TTools extends ToolsInput =
       return [workflow];
     }
 
+    // If after filtering we have a single Processor (not a workflow), return it directly
+    // This allows the ProcessorRunner to handle it directly and only create spans
+    // for the phases the processor actually implements
+    if (validProcessors.length === 1 && isProcessor(validProcessors[0]!)) {
+      return validProcessors as T[];
+    }
+
     // Create a single workflow with all processors chained
     // Mark it as a processor workflow type
     // validateInputs is disabled because ProcessorStepSchema contains z.custom() fields
